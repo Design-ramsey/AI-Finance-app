@@ -1,108 +1,2757 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Finance App</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aura Finance | Secure Personal Finance Manager</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4A55A2">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Google Fonts: DM Sans + DM Serif Display -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&display=swap"
+        rel="stylesheet">
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['DM Sans', 'sans-serif'],
+                        display: ['DM Serif Display', 'serif'],
+                    },
+                    borderRadius: {
+                        'xs': '4px', 'sm': '8px', 'md': '12px', 'lg': '16px',
+                        'xl': '20px', '2xl': '28px', '3xl': '32px', '4xl': '40px'
+                    },
+                    colors: {
+                        m3: {
+                            primary: '#4A55A2',
+                            'on-primary': '#FFFFFF',
+                            'primary-container': '#DEE0FF',
+                            'on-primary-container': '#00006E',
+                            secondary: '#5B5D72',
+                            'on-secondary': '#FFFFFF',
+                            'secondary-container': '#DFE1F9',
+                            surface: '#FDFBFF',
+                            'on-surface': '#1C1B1F',
+                            'surface-variant': '#E4E1EC',
+                            'on-surface-variant': '#47464F',
+                            outline: '#79747E',
+                            'outline-variant': '#CAC4D0',
+                            error: '#B3261E',
+                            'error-container': '#F9DEDC',
+                            'on-error': '#FFFFFF',
+                            'surface-container-lowest': '#FFFFFF',
+                            'surface-container-low': '#F7F2FA',
+                            'surface-container': '#F3EDF7',
+                            'surface-container-high': '#ECE6F0',
+                            'surface-container-highest': '#E6E0E9',
+                            // dark
+                            'primary-dark': '#BEC2FF',
+                            'surface-dark': '#141218',
+                            'on-surface-dark': '#E6E1E5',
+                            'surface-container-dark': '#211F26',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* CSS Variables for theming */
+        /* ========== M3 DESIGN TOKENS ========== */
         :root {
-            --primary-color: #6200ea;
-            --secondary-color: #03dac6;
-            --background-color: #ffffff;
-            --text-color: #000000;
-            --dark-background-color: #121212;
-            --dark-text-color: #ffffff;
+            --md-sys-color-primary: #4A55A2;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #DEE0FF;
+            --md-sys-color-on-primary-container: #00006E;
+            --md-sys-color-secondary: #5B5D72;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #DFE1F9;
+            --md-sys-color-on-secondary-container: #181A2C;
+            --md-sys-color-tertiary: #76536B;
+            --md-sys-color-tertiary-container: #FFD8EF;
+            --md-sys-color-error: #B3261E;
+            --md-sys-color-error-container: #F9DEDC;
+            --md-sys-color-surface: #FDFBFF;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-variant: #E4E1EC;
+            --md-sys-color-on-surface-variant: #47464F;
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-outline-variant: #CAC4D0;
+            --md-sys-color-inverse-surface: #313033;
+            --md-sys-color-inverse-on-surface: #F4EFF4;
+            --md-sys-color-surface-container-lowest: #FFFFFF;
+            --md-sys-color-surface-container-low: #F7F2FA;
+            --md-sys-color-surface-container: #F3EDF7;
+            --md-sys-color-surface-container-high: #ECE6F0;
+            --md-sys-color-surface-container-highest: #E6E0E9;
+            /* Semantic */
+            --success: #1B873A;
+            --success-container: #B2F2BB;
+            --warning: #B06B00;
+            --warning-container: #FFDDB0;
+            /* Elevation overlays */
+            --md-elevation-1: 0 1px 2px rgba(0, 0, 0, .10), 0 1px 3px rgba(0, 0, 0, .06);
+            --md-elevation-2: 0 1px 2px rgba(0, 0, 0, .12), 0 2px 6px rgba(0, 0, 0, .10);
+            --md-elevation-3: 0 4px 8px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .10);
+            --md-elevation-4: 0 6px 10px rgba(0, 0, 0, .12), 0 1px 18px rgba(0, 0, 0, .08);
+            --md-elevation-5: 0 8px 12px rgba(0, 0, 0, .16), 0 4px 32px rgba(0, 0, 0, .08);
         }
-        /* Basic styles */
+
+        .dark {
+            --md-sys-color-primary: #BEC2FF;
+            --md-sys-color-on-primary: #1B1F6B;
+            --md-sys-color-primary-container: #333888;
+            --md-sys-color-on-primary-container: #DEE0FF;
+            --md-sys-color-secondary: #C3C3DC;
+            --md-sys-color-on-secondary: #2D2F42;
+            --md-sys-color-secondary-container: #444559;
+            --md-sys-color-on-secondary-container: #DFE1F9;
+            --md-sys-color-tertiary: #E6B8D6;
+            --md-sys-color-tertiary-container: #5B3A51;
+            --md-sys-color-error: #F2B8B5;
+            --md-sys-color-error-container: #8C1D18;
+            --md-sys-color-surface: #141218;
+            --md-sys-color-on-surface: #E6E1E5;
+            --md-sys-color-surface-variant: #47464F;
+            --md-sys-color-on-surface-variant: #CAC4D0;
+            --md-sys-color-outline: #938F99;
+            --md-sys-color-outline-variant: #47464F;
+            --md-sys-color-inverse-surface: #E6E1E5;
+            --md-sys-color-inverse-on-surface: #313033;
+            --md-sys-color-surface-container-lowest: #0F0D13;
+            --md-sys-color-surface-container-low: #1C1A22;
+            --md-sys-color-surface-container: #201F26;
+            --md-sys-color-surface-container-high: #2B2930;
+            --md-sys-color-surface-container-highest: #36343B;
+            --success: #7ADB8D;
+            --success-container: #00391E;
+            --warning: #FFB85B;
+            --warning-container: #5C3800;
+        }
+
+        /* ========== BASE STYLES ========== */
+        html {
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            background: var(--md-sys-color-surface-container-low);
+            color: var(--md-sys-color-on-surface);
+            font-family: 'DM Sans', sans-serif;
         }
-        /* Dark mode styles */
-        body.dark {
-            background-color: var(--dark-background-color);
-            color: var(--dark-text-color);
+
+        @media (max-width: 640px) {
+            html {
+                font-size: 14px;
+            }
         }
-        /* Button styles with hover effects */
-        button {
-            background-color: var(--primary-color);
-            color: white;
+
+        /* ========== M3 TYPOGRAPHY ========== */
+        .display-large {
+            font-family: 'DM Serif Display', serif;
+            font-size: 57px;
+            line-height: 64px;
+            letter-spacing: -.25px;
+        }
+
+        .display-medium {
+            font-family: 'DM Serif Display', serif;
+            font-size: 45px;
+            line-height: 52px;
+        }
+
+        .display-small {
+            font-family: 'DM Serif Display', serif;
+            font-size: 36px;
+            line-height: 44px;
+        }
+
+        .headline-large {
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 40px;
+            letter-spacing: 0;
+        }
+
+        .headline-medium {
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 36px;
+            letter-spacing: 0;
+        }
+
+        .headline-small {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 32px;
+        }
+
+        .title-large {
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+
+        .title-medium {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 24px;
+            letter-spacing: .15px;
+        }
+
+        .title-small {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            letter-spacing: .1px;
+        }
+
+        .body-large {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: .5px;
+        }
+
+        .body-medium {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            letter-spacing: .25px;
+        }
+
+        .body-small {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 16px;
+            letter-spacing: .4px;
+        }
+
+        .label-large {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+            letter-spacing: .1px;
+        }
+
+        .label-medium {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 16px;
+            letter-spacing: .5px;
+        }
+
+        .label-small {
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 16px;
+            letter-spacing: .5px;
+        }
+
+        /* ========== M3 ELEVATION ========== */
+        .elev-1 {
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .elev-2 {
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .elev-3 {
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .elev-4 {
+            box-shadow: var(--md-elevation-4);
+        }
+
+        .elev-5 {
+            box-shadow: var(--md-elevation-5);
+        }
+
+        /* ========== M3 CARDS ========== */
+        .card-elevated {
+            background: var(--md-sys-color-surface-container-low);
+            box-shadow: var(--md-elevation-1);
+            border-radius: 12px;
+            transition: box-shadow .2s, transform .2s;
+        }
+
+        .card-elevated:hover {
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .card-filled {
+            background: var(--md-sys-color-surface-container-highest);
+            border-radius: 12px;
+        }
+
+        .card-outlined {
+            background: var(--md-sys-color-surface);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 12px;
+        }
+
+        .card-glass {
+            background: rgba(255, 255, 255, .72);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, .35);
+            box-shadow: var(--md-elevation-2);
+            border-radius: 24px;
+            transition: box-shadow .3s;
+        }
+
+        .dark .card-glass {
+            background: rgba(32, 31, 38, .8);
+            border-color: rgba(255, 255, 255, .06);
+        }
+
+        /* ========== M3 BUTTONS ========== */
+        .btn-filled {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .1px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
+            min-height: 40px;
+            transition: box-shadow .2s, opacity .2s;
+            position: relative;
+            overflow: hidden;
         }
-        button:hover {
-            background-color: var(--secondary-color);
-            transform: scale(1.05);
+
+        .btn-filled:hover {
+            box-shadow: var(--md-elevation-2);
         }
-        /* Accessibility enhancements */
-        [aria-hidden="true"] {
+
+        .btn-filled:active {
+            opacity: .9;
+            transform: scale(.98);
+        }
+
+        .btn-filled:disabled {
+            opacity: .38;
+            pointer-events: none;
+        }
+
+        .btn-tonal {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+            border: none;
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 40px;
+            transition: box-shadow .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-tonal:hover {
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .btn-outlined {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--md-sys-color-primary);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 40px;
+            transition: background .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-outlined:hover {
+            background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+        }
+
+        .btn-text {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--md-sys-color-primary);
+            border: none;
+            border-radius: 20px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 40px;
+            transition: background .2s;
+        }
+
+        .btn-text:hover {
+            background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: var(--md-sys-color-on-surface-variant);
+            cursor: pointer;
+            transition: background .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-icon:hover {
+            background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+        }
+
+        /* M3 FAB */
+        .fab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border: none;
+            border-radius: 16px;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            box-shadow: var(--md-elevation-3);
+            transition: box-shadow .3s, transform .3s;
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 90;
+        }
+
+        .fab:hover {
+            box-shadow: var(--md-elevation-4);
+            transform: translateY(-2px);
+        }
+
+        .fab.active {
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+        }
+
+        /* ========== M3 TEXT FIELDS ========== */
+        .field-filled {
+            background: var(--md-sys-color-surface-container-high);
+            border: none;
+            border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
+            border-radius: 4px 4px 0 0;
+            padding: 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            color: var(--md-sys-color-on-surface);
+            outline: none;
+            transition: border-color .2s, background .2s;
+            width: 100%;
+        }
+
+        .field-filled:focus {
+            border-bottom: 2px solid var(--md-sys-color-primary);
+            background: var(--md-sys-color-surface-container-high);
+        }
+
+        .field-outlined {
+            background: transparent;
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 4px;
+            padding: 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            color: var(--md-sys-color-on-surface);
+            outline: none;
+            transition: border-color .2s, border-width .1s;
+            width: 100%;
+        }
+
+        .field-outlined:focus {
+            border: 2px solid var(--md-sys-color-primary);
+        }
+
+        .field-outlined::placeholder {
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        /* ========== M3 CHIPS ========== */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 8px;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--md-sys-color-on-surface-variant);
+            transition: background .2s, border-color .2s;
+        }
+
+        .chip:hover {
+            background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+        }
+
+        .chip.active {
+            background: var(--md-sys-color-secondary-container);
+            border-color: transparent;
+            color: var(--md-sys-color-on-secondary-container);
+        }
+
+        /* ========== PRIVACY MASK ========== */
+        /* BUG FIX: body gets class 'privacy-active' which triggers blur on .privacy-text */
+        .privacy-active .privacy-text {
+            filter: blur(8px);
+            user-select: none;
+            pointer-events: none;
+            transition: filter .3s, opacity .3s;
+        }
+
+        .privacy-text {
+            transition: filter .3s;
+        }
+
+        /* ========== STATE LAYER ========== */
+        .state-layer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .state-layer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: currentColor;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s;
+        }
+
+        .state-layer:hover::after {
+            opacity: .08;
+        }
+
+        .state-layer:active::after {
+            opacity: .12;
+        }
+
+        /* ========== CUSTOM SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--md-sys-color-outline-variant);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--md-sys-color-outline);
+        }
+
+        .no-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
+        }
+
+        /* ========== TOAST / SNACKBAR ========== */
+        #notification-host {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 300;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
+            max-width: 480px;
+            padding: 0 16px;
+            pointer-events: none;
+        }
+
+        .snackbar {
+            background: var(--md-sys-color-inverse-surface);
+            color: var(--md-sys-color-inverse-on-surface);
+            border-radius: 4px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 280px;
+            max-width: 100%;
+            box-shadow: var(--md-elevation-3);
+            animation: snackbarIn .3s cubic-bezier(.2, 0, 0, 1) forwards;
+            pointer-events: auto;
+        }
+
+        .snackbar.success .snackbar-icon {
+            color: #7ADB8D;
+        }
+
+        .snackbar.error .snackbar-icon {
+            color: #F2B8B5;
+        }
+
+        .snackbar.info .snackbar-icon {
+            color: var(--md-sys-color-primary);
+        }
+
+        .snackbar-action {
+            color: var(--md-sys-color-primary);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: .1px;
+            cursor: pointer;
+            margin-left: auto;
+            flex-shrink: 0;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+
+        @keyframes snackbarIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes snackbarOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(10px) scale(.9);
+            }
+        }
+
+        /* ========== M3 DIALOG ========== */
+        .dialog-scrim {
+            position: fixed;
+            inset: 0;
+            z-index: 160;
+            background: rgba(0, 0, 0, .5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .dialog-scrim.open {
+            display: flex;
+        }
+
+        .dialog {
+            background: var(--md-sys-color-surface-container-high);
+            border-radius: 28px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: var(--md-elevation-5);
+            animation: dialogIn .3s cubic-bezier(.2, 0, 0, 1);
+        }
+
+        @keyframes dialogIn {
+            from {
+                opacity: 0;
+                transform: scale(.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .dialog-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dialog-title {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .dialog-body {
+            margin-bottom: 24px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .dialog-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        /* ========== AI CHAT OVERLAY ========== */
+        #aiChatOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            background: rgba(0, 0, 0, .5);
+            backdrop-filter: blur(8px);
+        }
+
+        .ai-chat-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 88vh;
+            background: var(--md-sys-color-surface);
+            border-radius: 28px 28px 0 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--md-elevation-5);
+            transform: translateY(100%);
+            transition: transform .4s cubic-bezier(.2, 0, 0, 1);
+        }
+
+        .ai-chat-container.active {
+            transform: translateY(0) !important;
+        }
+
+        @media (min-width: 769px) {
+            .ai-chat-container {
+                right: 0;
+                top: 0;
+                bottom: 0;
+                left: auto;
+                width: 400px;
+                height: 100vh;
+                border-radius: 0;
+                transform: translateX(100%);
+                border-left: 1px solid var(--md-sys-color-outline-variant);
+            }
+
+            .ai-chat-container.active {
+                transform: translateX(0) !important;
+            }
+        }
+
+        .ai-chat-header {
+            padding: 24px;
+            flex-shrink: 0;
+            background: var(--md-sys-color-surface-container);
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 28px 28px 0 0;
+        }
+
+        @media (min-width: 769px) {
+            .ai-chat-header {
+                border-radius: 0;
+            }
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .ai-chat-input-wrap {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(to top, var(--md-sys-color-surface) 80%, transparent);
+        }
+
+        .ai-chat-input-inner {
+            background: var(--md-sys-color-surface-container-high);
+            border-radius: 24px;
+            padding: 12px 48px 12px 16px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            resize: none;
+            max-height: 120px;
+            line-height: 1.5;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .ai-chat-input::placeholder {
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .ai-chat-send-btn {
+            position: absolute;
+            right: 24px;
+            bottom: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .ai-chat-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--md-elevation-3);
+        }
+
+        .ai-chat-send-btn:active {
+            transform: scale(.95);
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 20px;
+            animation: msgIn .3s cubic-bezier(.2, 0, 0, 1);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: var(--md-sys-color-surface-container-high);
+            color: var(--md-sys-color-on-surface);
+            border-bottom-left-radius: 6px;
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .thinking-dots span {
+            display: inline-block;
+            animation: dotBounce 1.4s infinite both;
+            margin: 0 1px;
+            font-size: 18px;
+        }
+
+        .thinking-dots span:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .thinking-dots span:nth-child(3) {
+            animation-delay: .4s;
+        }
+
+        @keyframes dotBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .ai-quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .ai-quick-chip {
+            padding: 8px 14px;
+            background: var(--md-sys-color-surface-container-high);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--md-sys-color-on-surface);
+            transition: background .2s;
+        }
+
+        .ai-quick-chip:hover {
+            background: var(--md-sys-color-surface-container-highest);
+        }
+
+        /* ========== CUSTOM SELECT ========== */
+        .custom-select-options {
+            background: var(--md-sys-color-surface-container);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 4px;
+            box-shadow: var(--md-elevation-2);
+        }
+
+        .custom-select-option {
+            padding: 12px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--md-sys-color-on-surface);
+            transition: background .15s;
+        }
+
+        .custom-select-option:hover {
+            background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+        }
+
+        /* ========== CATEGORY COLORS ========== */
+        .cat-food {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .cat-transport {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .cat-shopping {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .cat-bills {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .cat-salary {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .cat-health {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .cat-savings {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+        }
+
+        .cat-entertainment {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+        }
+
+        .cat-education {
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+        }
+
+        .cat-other {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .anim-entry {
+            animation: slideUpFade .5s cubic-bezier(.2, 0, 0, 1) both;
+            opacity: 0;
+        }
+
+        .delay-1 {
+            animation-delay: .1s;
+        }
+
+        .delay-2 {
+            animation-delay: .2s;
+        }
+
+        .delay-3 {
+            animation-delay: .3s;
+        }
+
+        @keyframes blob {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1)
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1)
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(.9)
+            }
+        }
+
+        .anim-blob {
+            animation: blob 7s infinite;
+        }
+
+        @keyframes shimmerMove {
+            0% {
+                background-position: -200% 0
+            }
+
+            100% {
+                background-position: 200% 0
+            }
+        }
+
+        .shimmer-loading {
+            background: linear-gradient(90deg, var(--md-sys-color-surface-container-high) 25%, var(--md-sys-color-surface-container-highest) 50%, var(--md-sys-color-surface-container-high) 75%);
+            background-size: 200% 100%;
+            animation: shimmerMove 2s infinite linear;
+        }
+
+        .ai-cursor::after {
+            content: '▋';
+            animation: cursorBlink 1s infinite;
+            color: var(--md-sys-color-primary);
+        }
+
+        @keyframes cursorBlink {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0
+            }
+        }
+
+        /* ========== TOGGLE SWITCH ========== */
+        .m3-switch {
+            position: relative;
+            width: 52px;
+            height: 32px;
+            cursor: pointer;
+        }
+
+        .m3-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .m3-switch-track {
+            width: 52px;
+            height: 32px;
+            border-radius: 16px;
+            background: var(--md-sys-color-surface-variant);
+            border: 2px solid var(--md-sys-color-outline);
+            transition: background .2s, border-color .2s;
+        }
+
+        .m3-switch-thumb {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--md-sys-color-outline);
+            transition: transform .3s cubic-bezier(.34, 1.56, .64, 1), width .2s, height .2s, background .2s;
+        }
+
+        .m3-switch input:checked~.m3-switch-track {
+            background: var(--md-sys-color-primary);
+            border-color: var(--md-sys-color-primary);
+        }
+
+        .m3-switch input:checked~.m3-switch-thumb {
+            transform: translateX(20px);
+            background: var(--md-sys-color-on-primary);
+            width: 24px;
+            height: 24px;
+            top: 2px;
+            left: 2px;
+        }
+
+        /* ========== METRICS CARD ========== */
+        .metric-pill {
+            border-radius: 12px;
+            padding: 16px;
+            background: var(--md-sys-color-surface-container);
+            transition: background .2s;
+        }
+
+        .metric-pill:hover {
+            background: var(--md-sys-color-surface-container-high);
+        }
+
+        /* ========== INPUT FOCUS ========== */
+        .input-focus-anim:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent);
+        }
+
+        /* ========== RIPPLE ========== */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-wave {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .5);
+            transform: scale(0);
+            animation: rippleAnim .6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleAnim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* ========== AI INSIGHTS ========== */
+        .ai-insight-card {
+            background: linear-gradient(135deg, color-mix(in srgb, var(--md-sys-color-primary) 6%, var(--md-sys-color-surface)), var(--md-sys-color-surface));
+            border: 1px solid color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        /* ========== EXTRACTED DATA ========== */
+        .extracted-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .extracted-item:last-child {
+            border-bottom: none;
+        }
+
+        /* ========== M3 PROGRESS INDICATOR ========== */
+        .linear-progress {
+            height: 4px;
+            border-radius: 2px;
+            background: var(--md-sys-color-surface-container-highest);
+            overflow: hidden;
+        }
+
+        .linear-progress-bar {
+            height: 100%;
+            border-radius: 2px;
+            background: var(--md-sys-color-primary);
+            transition: width .4s;
+        }
+
+        /* AUTH ANIMATED BACKGROUND */
+        .auth-bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: .15;
+            pointer-events: none;
+        }
+
+        /* M3 segment control (chart tabs) */
+        .seg-ctrl {
+            display: flex;
+            background: var(--md-sys-color-surface-container);
+            border-radius: 8px;
+            padding: 4px;
+            gap: 2px;
+        }
+
+        .seg-btn {
+            flex: 1;
+            padding: 7px 12px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--md-sys-color-on-surface-variant);
+            transition: background .2s, color .2s;
+            white-space: nowrap;
+            letter-spacing: .5px;
+        }
+
+        .seg-btn.active {
+            background: var(--md-sys-color-surface-container-highest);
+            color: var(--md-sys-color-on-surface);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        /* Animated border on hover for balance card */
+        .glow-border {
+            transition: box-shadow .5s;
+        }
+
+        .glow-border:hover {
+            box-shadow: 0 0 0 2px var(--md-sys-color-primary), var(--md-elevation-4);
+        }
+
+        @media (max-width: 640px) {
+            .fab {
+                bottom: 16px;
+                right: 16px;
+            }
         }
     </style>
 </head>
-<body>
-    <header>
-        <h1>Welcome to AI Finance App</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Features</h2>
-            <p>Explore our advanced finance tools.</p>
-            <button aria-label="Explore features">Explore</button>
-        </section>
-    </main>
+
+<body id="appBody" class="min-h-screen">
+
+    <!-- ============================== NOTIFICATIONS ============================== -->
+    <div id="notification-host" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- ============================== FAB (AI Chat) ============================== -->
+    <button id="aiChatFloatingBtn" class="fab" aria-label="Open AI Financial Assistant">
+        <i data-lucide="sparkles" class="w-6 h-6"></i>
+    </button>
+
+    <!-- ============================== AI CHAT OVERLAY ============================== -->
+    <div id="aiChatOverlay">
+        <div id="aiChatContainer" class="ai-chat-container">
+            <!-- Header -->
+            <div class="ai-chat-header">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                            style="background:var(--md-sys-color-primary-container)">
+                            <i data-lucide="sparkles" class="w-5 h-5"
+                                style="color:var(--md-sys-color-on-primary-container)"></i>
+                        </div>
+                        <div>
+                            <p class="title-medium" style="color:var(--md-sys-color-on-surface)">Financial Assistant</p>
+                            <p class="body-small" style="color:var(--md-sys-color-on-surface-variant)">Powered by Gemini
+                                AI</p>
+                        </div>
+                    </div>
+                    <button id="closeChatBtn" class="btn-icon" aria-label="Close chat">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="ai-quick-actions">
+                    <button class="ai-quick-chip" onclick="quickAction('analyzeSpending')">📊 Analyze spending</button>
+                    <button class="ai-quick-chip" onclick="quickAction('savingsTips')">💰 Saving tips</button>
+                    <button class="ai-quick-chip" onclick="quickAction('budgetReview')">📋 Budget review</button>
+                    <button class="ai-quick-chip" onclick="quickAction('investAdvice')">📈 Investments</button>
+                </div>
+            </div>
+            <!-- Messages -->
+            <div id="aiChatMessages" class="ai-chat-messages">
+                <div class="message assistant">
+                    <p class="font-semibold mb-2">👋 Hello! I'm your AI financial assistant.</p>
+                    <p>I can help you analyze spending, suggest budgets, provide savings recommendations, and answer
+                        financial questions.</p>
+                    <p class="mt-2 opacity-70 text-sm">Add your Gemini API key in Settings to get started.</p>
+                </div>
+            </div>
+            <!-- Input -->
+            <div class="ai-chat-input-wrap">
+                <div class="ai-chat-input-inner">
+                    <textarea id="aiChatInput" class="ai-chat-input" placeholder="Ask about your finances..." rows="1"
+                        oninput="autoResizeTextarea(this)"></textarea>
+                </div>
+                <button id="aiChatSendBtn" class="ai-chat-send-btn" aria-label="Send message">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== AUTH SCREEN ============================== -->
+    <div id="authScreen" class="fixed inset-0 z-[150] flex items-center justify-center p-4"
+        style="background:var(--md-sys-color-surface)">
+        <!-- Animated blobs -->
+        <div class="auth-bg-blob w-96 h-96"
+            style="background:var(--md-sys-color-primary);top:-10%;left:-10%;animation:blob 7s infinite"></div>
+        <div class="auth-bg-blob w-80 h-80"
+            style="background:var(--md-sys-color-tertiary-container);bottom:5%;right:-5%;animation:blob 9s infinite 2s">
+        </div>
+
+        <div class="card-glass w-full max-w-sm p-8 text-center relative z-10">
+            <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 elev-2"
+                style="background:var(--md-sys-color-primary-container); color:var(--md-sys-color-on-primary-container)">
+                <i data-lucide="shield" class="w-8 h-8"></i>
+            </div>
+            <p class="headline-small mb-1" id="authTitle" style="color:var(--md-sys-color-on-surface)">Secure Finance
+                Vault</p>
+            <p class="body-medium mb-8" id="authSubtitle" style="color:var(--md-sys-color-on-surface-variant)">Your data
+                is encrypted locally with AES-256.</p>
+
+            <form id="authForm" class="space-y-4">
+                <div id="authInputWrap">
+                    <input type="password" id="authInput" placeholder="Enter your password"
+                        class="field-outlined text-center w-full input-focus-anim"
+                        style="border-radius:28px; padding:16px 24px; font-size:16px;" aria-label="Password">
+                </div>
+                <button type="submit" class="btn-filled ripple w-full py-3"
+                    style="border-radius:28px; font-size:15px; letter-spacing:.5px; min-height:52px;">
+                    Unlock / Set Password
+                </button>
+            </form>
+            <div class="flex items-center justify-center gap-2 mt-6 opacity-50">
+                <i data-lucide="lock" class="w-3 h-3"></i>
+                <p class="label-small uppercase tracking-widest">End-to-End Encrypted</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== SETTINGS DIALOG ============================== -->
+    <div id="settingsModal" class="dialog-scrim">
+        <div class="dialog">
+            <div class="dialog-icon"
+                style="background:var(--md-sys-color-secondary-container); color:var(--md-sys-color-on-secondary-container)">
+                <i data-lucide="settings" class="w-6 h-6"></i>
+            </div>
+            <p class="headline-small dialog-title" style="color:var(--md-sys-color-on-surface)">Settings</p>
+            <div class="dialog-body space-y-4">
+                <div>
+                    <p class="label-medium mb-2" style="color:var(--md-sys-color-on-surface-variant)">GEMINI API KEY</p>
+                    <input type="password" id="apiKeyInput" placeholder="Paste AIza..." class="field-outlined w-full"
+                        style="border-radius:12px;" aria-label="Gemini API Key">
+                    <p class="body-small mt-1 opacity-60">Stored encrypted on your device. Get a free key at
+                        <strong>aistudio.google.com</strong></p>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <button onclick="closeSettingsModal()" class="btn-text">Cancel</button>
+                <button onclick="saveSettings()" class="btn-filled ripple">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== RESET DIALOG ============================== -->
+    <div id="resetModal" class="dialog-scrim">
+        <div class="dialog">
+            <div class="dialog-icon"
+                style="background:var(--md-sys-color-error-container); color:var(--md-sys-color-error)">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <p class="headline-small dialog-title" style="color:var(--md-sys-color-on-surface)">Reset All Data?</p>
+            <div class="dialog-body">
+                <p class="body-medium">This cannot be undone. Enter your password to confirm.</p>
+                <input type="password" id="resetPinInput" placeholder="Password" class="field-outlined w-full mt-4"
+                    style="border-radius:12px; text-align:center;">
+            </div>
+            <div class="dialog-actions">
+                <button onclick="closeResetModal()" class="btn-text">Cancel</button>
+                <button onclick="confirmReset()" class="btn-filled"
+                    style="background:var(--md-sys-color-error)">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================== MAIN APP ============================== -->
+    <div id="appContent" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+        <!-- HEADER -->
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10 anim-entry">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center elev-2 transition-transform hover:scale-105 duration-300"
+                    style="background:linear-gradient(135deg,var(--md-sys-color-primary),#6B74D6)">
+                    <i data-lucide="zap" class="w-6 h-6" style="color:var(--md-sys-color-on-primary)"></i>
+                </div>
+                <div>
+                    <h1 class="title-large font-semibold tracking-tight"
+                        style="background:linear-gradient(135deg,var(--md-sys-color-primary),#6B74D6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-family:'DM Serif Display', serif; font-size:26px;">
+                        Aura Finance</h1>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <p class="label-small opacity-60 uppercase">Live System · GH₵</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-2 w-full md:w-auto md:justify-end">
+                <button onclick="triggerImport()" class="btn-outlined gap-2"
+                    style="border-radius:20px; min-height:40px;" title="Import CSV" aria-label="Import CSV">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline label-medium">Import</span>
+                </button>
+                <input type="file" id="importFile" accept=".csv" class="hidden" onchange="processImport(this)">
+
+                <button onclick="exportToCSV()" class="btn-outlined gap-2" style="border-radius:20px; min-height:40px;"
+                    title="Export CSV" aria-label="Export CSV">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline label-medium">Export</span>
+                </button>
+
+                <div class="w-px h-7 mx-1 hidden sm:block" style="background:var(--md-sys-color-outline-variant)"></div>
+
+                <button onclick="togglePrivacy()" id="privacyToggle" class="btn-icon" title="Toggle Privacy"
+                    aria-label="Privacy mode">
+                    <i data-lucide="eye" id="privacyIcon" class="w-5 h-5"></i>
+                </button>
+                <button id="themeToggle" class="btn-icon" aria-label="Toggle dark mode">
+                    <i data-lucide="moon" id="themeIcon" class="w-5 h-5"></i>
+                </button>
+                <button onclick="openSettingsModal()" class="btn-icon" title="Settings" aria-label="Settings">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+                <button onclick="openResetModal()" class="btn-icon" style="color:var(--md-sys-color-error)"
+                    title="Reset" aria-label="Reset data">
+                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- DASHBOARD GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+
+            <!-- BALANCE CARD (col 8) -->
+            <div class="lg:col-span-8 anim-entry delay-1 rounded-3xl p-6 sm:p-10 relative overflow-hidden glow-border"
+                style="background:linear-gradient(135deg, var(--md-sys-color-primary-container) 0%, color-mix(in srgb, var(--md-sys-color-primary) 15%, var(--md-sys-color-surface)) 100%);">
+                <!-- Background icon -->
+                <div class="absolute -top-16 -right-16 w-72 h-72 opacity-5 pointer-events-none">
+                    <i data-lucide="bar-chart-4" class="w-full h-full"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="label-medium opacity-60 uppercase tracking-widest"
+                            style="color:var(--md-sys-color-on-primary-container)">Total Financial Health</p>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="label-small opacity-60 uppercase">LIVE</span>
+                        </div>
+                    </div>
+
+                    <h2 class="privacy-text mb-8 font-bold tracking-tight" id="totalBalance"
+                        style="font-family:'DM Serif Display',serif; font-size:clamp(2rem,6vw,4rem); line-height:1.1; color:var(--md-sys-color-on-primary-container)">
+                        GH₵0.00</h2>
+
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="rounded-2xl p-4"
+                            style="background:rgba(255,255,255,.25); backdrop-filter:blur(8px)">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="arrow-down-left" class="w-4 h-4 text-emerald-600"></i>
+                                <span class="label-small opacity-70 uppercase">Monthly Income</span>
+                            </div>
+                            <p class="privacy-text font-bold" id="monthlyIncome"
+                                style="font-size:clamp(1.1rem,3vw,1.5rem)">GH₵0.00</p>
+                            <p class="body-small opacity-50 mt-1" id="incomeChange">+0% from last month</p>
+                        </div>
+                        <div class="rounded-2xl p-4"
+                            style="background:rgba(255,255,255,.25); backdrop-filter:blur(8px)">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="arrow-up-right" class="w-4 h-4 text-red-500"></i>
+                                <span class="label-small opacity-70 uppercase">Monthly Expenses</span>
+                            </div>
+                            <p class="privacy-text font-bold" id="monthlyExpense"
+                                style="font-size:clamp(1.1rem,3vw,1.5rem)">GH₵0.00</p>
+                            <p class="body-small opacity-50 mt-1" id="expenseChange">+0% from last month</p>
+                        </div>
+                    </div>
+
+                    <!-- Summary row -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,.2)">
+                            <p class="label-small opacity-60 uppercase mb-1">All-Time Income</p>
+                            <p class="privacy-text label-large" id="totalIncome">GH₵0.00</p>
+                        </div>
+                        <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,.2)">
+                            <p class="label-small opacity-60 uppercase mb-1">Savings Rate</p>
+                            <p class="label-large" id="savingsRate">0%</p>
+                        </div>
+                        <div class="rounded-xl p-3 text-center" style="background:rgba(255,255,255,.2)">
+                            <p class="label-small opacity-60 uppercase mb-1">Updated</p>
+                            <p class="label-large" id="lastUpdated">Now</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI INSIGHT PANEL (col 4) -->
+            <div class="lg:col-span-4 card-glass p-6 flex flex-col anim-entry delay-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="label-medium flex items-center gap-2 uppercase"
+                            style="color:var(--md-sys-color-primary)">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i> AI Advisor
+                        </p>
+                        <p class="body-small opacity-50 mt-0.5">Powered by Gemini 1.5</p>
+                    </div>
+                    <button onclick="getAIAdvice()" id="aiAdvisorBtn" class="btn-tonal gap-2"
+                        style="border-radius:20px; padding:8px 16px; font-size:13px; min-height:36px;">
+                        <i data-lucide="refresh-cw" class="w-3 h-3"></i> Analyze
+                    </button>
+                </div>
+                <div id="aiResponse" class="flex-1 overflow-y-auto max-h-72 pr-1" style="scrollbar-width:thin">
+                    <div class="flex flex-col items-center justify-center h-full py-8 text-center">
+                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+                            style="background:var(--md-sys-color-secondary-container)">
+                            <i data-lucide="brain" class="w-7 h-7 opacity-60 animate-pulse"
+                                style="color:var(--md-sys-color-on-secondary-container)"></i>
+                        </div>
+                        <p class="title-small mb-1">AI Financial Advisor</p>
+                        <p class="body-small opacity-50">Click Analyze to get personalized insights based on your
+                            transactions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHART + ADD RECORD -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+
+            <!-- CHART PANEL (col 7) -->
+            <div class="lg:col-span-7">
+                <div class="card-glass p-6 sm:p-8 mb-6 anim-entry delay-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div>
+                            <p class="title-medium">Visual Intelligence</p>
+                            <p class="body-small opacity-60 mt-0.5">Real-time financial analytics</p>
+                        </div>
+                        <div class="seg-ctrl overflow-x-auto no-scrollbar">
+                            <button onclick="setChartType('doughnut')" id="btnDoughnut"
+                                class="seg-btn active">Breakdown</button>
+                            <button onclick="setChartType('weekly')" id="btnWeekly" class="seg-btn">Weekly</button>
+                            <button onclick="setChartType('monthly')" id="btnMonthly" class="seg-btn">Monthly</button>
+                            <button onclick="setChartType('yearly')" id="btnYearly" class="seg-btn">Yearly</button>
+                        </div>
+                    </div>
+                    <div class="relative h-64 flex items-center justify-center">
+                        <canvas id="financeChart"></canvas>
+                        <div id="chartEmpty" class="hidden flex-col items-center justify-center text-center opacity-40">
+                            <i data-lucide="bar-chart-2" class="w-12 h-12 mb-3"></i>
+                            <p class="body-medium">Add transactions to see your chart</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- METRICS ROW -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 anim-entry delay-3">
+                    <div class="metric-pill">
+                        <div class="flex items-center justify-between mb-2">
+                            <i data-lucide="target" class="w-4 h-4" style="color:var(--md-sys-color-tertiary)"></i>
+                            <span class="label-small px-2 py-0.5 rounded-full"
+                                style="background:var(--md-sys-color-tertiary-container); color:var(--md-sys-color-tertiary)">Goal</span>
+                        </div>
+                        <p class="body-small font-semibold mb-1">Budget Adherence</p>
+                        <p class="title-medium font-bold" id="budgetAdherence">100%</p>
+                        <div class="linear-progress mt-2">
+                            <div class="linear-progress-bar" id="budgetBar" style="width:100%"></div>
+                        </div>
+                    </div>
+                    <div class="metric-pill">
+                        <div class="flex items-center justify-between mb-2">
+                            <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
+                            <span
+                                class="label-small px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">Total</span>
+                        </div>
+                        <p class="body-small font-semibold mb-1">Net Balance</p>
+                        <p class="title-medium font-bold privacy-text" id="netWorth">GH₵0.00</p>
+                    </div>
+                    <div class="metric-pill">
+                        <div class="flex items-center justify-between mb-2">
+                            <i data-lucide="alert-circle" class="w-4 h-4" style="color:var(--md-sys-color-error)"></i>
+                            <span class="label-small px-2 py-0.5 rounded-full"
+                                style="background:var(--md-sys-color-error-container); color:var(--md-sys-color-error)">Watch</span>
+                        </div>
+                        <p class="body-small font-semibold mb-1">Largest Expense</p>
+                        <p class="title-medium font-bold privacy-text" id="largestExpense">GH₵0.00</p>
+                    </div>
+                    <div class="metric-pill">
+                        <div class="flex items-center justify-between mb-2">
+                            <i data-lucide="calendar" class="w-4 h-4" style="color:var(--md-sys-color-secondary)"></i>
+                            <span class="label-small px-2 py-0.5 rounded-full"
+                                style="background:var(--md-sys-color-secondary-container); color:var(--md-sys-color-on-secondary-container)">Daily</span>
+                        </div>
+                        <p class="body-small font-semibold mb-1">Avg. Daily Spend</p>
+                        <p class="title-medium font-bold privacy-text" id="avgDailySpend">GH₵0.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD RECORD (col 5) -->
+            <div class="lg:col-span-5 card-glass p-6 sm:p-8 anim-entry delay-3">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <p class="title-medium flex items-center gap-2">
+                            <i data-lucide="plus-circle" class="w-5 h-5" style="color:var(--md-sys-color-primary)"></i>
+                            Add Record
+                        </p>
+                        <p class="body-small opacity-60 mt-0.5">Log your income or expenses</p>
+                    </div>
+                    <button onclick="toggleSmartPaste()" class="btn-tonal gap-2"
+                        style="border-radius:20px; padding:8px 14px; font-size:13px; min-height:36px;">
+                        <i data-lucide="sparkles" class="w-3 h-3"></i> AI Paste
+                    </button>
+                </div>
+
+                <!-- Smart Paste Area -->
+                <div id="smartPasteArea" class="hidden mb-6" style="animation: slideUpFade .3s">
+                    <textarea id="pasteInput" rows="3"
+                        placeholder="Paste any text: 'Spent GH₵50 on Taxi', 'Earned 1200 freelance'"
+                        class="w-full rounded-xl p-4 resize-none body-medium outline-none transition-all"
+                        style="background:var(--md-sys-color-surface-container-high); border:1px solid var(--md-sys-color-outline-variant); color:var(--md-sys-color-on-surface);"></textarea>
+                    <button onclick="processSmartPasteAI()" id="smartPasteBtn"
+                        class="btn-tonal w-full mt-3 gap-2 ripple" style="border-radius:12px;">
+                        <i data-lucide="wand-2" class="w-4 h-4"></i>
+                        <span>Auto-Fill with AI</span>
+                    </button>
+                    <div id="pastePreview"></div>
+                </div>
+
+                <form id="financeForm" class="space-y-4">
+                    <!-- Description -->
+                    <input type="text" id="description" placeholder="What is this for?" required
+                        class="w-full rounded-2xl px-5 py-4 body-medium outline-none transition-all input-focus-anim"
+                        style="background:var(--md-sys-color-surface-container-high); border:1px solid var(--md-sys-color-outline-variant); color:var(--md-sys-color-on-surface);"
+                        aria-label="Transaction description">
+
+                    <!-- Amount + Type row -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex items-center rounded-2xl overflow-hidden"
+                            style="background:var(--md-sys-color-surface-container-high); border:1px solid var(--md-sys-color-outline-variant)">
+                            <button type="button" onclick="adjustAmount(-10)"
+                                class="btn-icon flex-shrink-0 rounded-none w-12" aria-label="Decrease">
+                                <i data-lucide="minus" class="w-4 h-4"></i>
+                            </button>
+                            <input type="number" id="amount" placeholder="0.00" required step="0.01" min="0"
+                                class="flex-1 py-4 bg-transparent outline-none text-sm font-bold text-center appearance-none"
+                                style="color:var(--md-sys-color-on-surface);" aria-label="Amount">
+                            <button type="button" onclick="adjustAmount(10)"
+                                class="btn-icon flex-shrink-0 rounded-none w-12" aria-label="Increase">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <!-- Type dropdown -->
+                        <div id="type-dropdown" class="relative"></div>
+                        <select id="type" class="hidden">
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+
+                    <!-- Category dropdown -->
+                    <div id="category-dropdown" class="relative z-20"></div>
+                    <select id="category" class="hidden">
+                        <option value="Food">Food & Dining</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Bills">Utilities & Bills</option>
+                        <option value="Salary">Salary / Income</option>
+                        <option value="Health">Health & Fitness</option>
+                        <option value="Savings">Savings & Invest</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Education">Education</option>
+                    </select>
+
+                    <!-- Date (optional) -->
+                    <input type="date" id="txDate"
+                        class="w-full rounded-2xl px-5 py-3.5 body-medium outline-none input-focus-anim"
+                        style="background:var(--md-sys-color-surface-container-high); border:1px solid var(--md-sys-color-outline-variant); color:var(--md-sys-color-on-surface);"
+                        aria-label="Transaction date">
+
+                    <!-- Recurring toggle -->
+                    <label class="flex items-center justify-between p-4 rounded-2xl cursor-pointer transition-colors"
+                        style="background:var(--md-sys-color-surface-container-high); border:1px solid var(--md-sys-color-outline-variant)">
+                        <div>
+                            <p class="label-medium">Recurring Payment?</p>
+                            <p class="body-small opacity-50 mt-0.5">Auto-logs every 30 days</p>
+                        </div>
+                        <label class="m3-switch">
+                            <input type="checkbox" id="isRecurring" aria-label="Recurring payment">
+                            <div class="m3-switch-track"></div>
+                            <div class="m3-switch-thumb"></div>
+                        </label>
+                    </label>
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn-filled w-full ripple gap-2"
+                        style="border-radius:20px; min-height:52px; font-size:15px;">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Save Record
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TRANSACTION HISTORY -->
+        <div class="card-glass p-6 sm:p-8 anim-entry delay-3 mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                <div>
+                    <p class="title-medium">Transaction History</p>
+                    <p class="body-small opacity-60 mt-0.5">Your complete financial timeline</p>
+                </div>
+                <div class="relative w-full sm:w-72 group">
+                    <i data-lucide="search"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40 transition-opacity group-focus-within:opacity-80"></i>
+                    <input type="text" id="searchInput" placeholder="Search transactions..."
+                        class="w-full pl-12 pr-4 py-3 rounded-full body-medium outline-none transition-all"
+                        style="background:var(--md-sys-color-surface-container-high); border:1px solid var(--md-sys-color-outline-variant); color:var(--md-sys-color-on-surface);"
+                        aria-label="Search transactions">
+                </div>
+            </div>
+            <div id="transactionList" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                <div class="flex flex-col items-center justify-center py-16 text-center opacity-40">
+                    <i data-lucide="inbox" class="w-14 h-14 mb-4"></i>
+                    <p class="title-small">No transactions yet</p>
+                    <p class="body-small mt-1">Add your first transaction above</p>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /appContent -->
+
+    <!-- ============================== SCRIPTS ============================== -->
     <script>
-        // Improved performance with lazy loading and debouncing
-        const lazyLoadImages = () => {
-            const images = document.querySelectorAll('img[data-src]');
-            const options = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.1
+        // ========== GLOBAL STATE ==========
+        let transactions = [];
+        let sessionPin = null;
+        let apiKey = "";
+        let financeChart = null;
+        let currentChartType = 'doughnut';
+        let isPrivacyMode = false;
+        let aiChatHistory = [];
+        let isStreamingResponse = false;
+        let lastExtractedData = null; // BUG FIX: store for addAllExtractedTransactions
+
+        // ========== RIPPLE EFFECT ==========
+        function createRipple(e) {
+            const btn = e.currentTarget;
+            if (btn.disabled) return;
+            const c = document.createElement('span');
+            const d = Math.max(btn.clientWidth, btn.clientHeight);
+            c.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - btn.getBoundingClientRect().left - d / 2}px;top:${e.clientY - btn.getBoundingClientRect().top - d / 2}px`;
+            c.classList.add('ripple-wave');
+            btn.querySelector('.ripple-wave')?.remove();
+            btn.appendChild(c);
+        }
+
+        // ========== INIT ==========
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+            initTheme();
+            initSecurity();
+            setupCustomDropdowns();
+            setDefaultDate();
+            initAIChat();
+
+            // Ripple on all .ripple buttons
+            document.querySelectorAll('.ripple').forEach(b => b.addEventListener('click', createRipple));
+
+            window.addEventListener('offline', () => notify('You are offline. Some features may be limited.', 'info'));
+            window.addEventListener('online', () => notify('Connection restored.', 'success'));
+
+            if (!window.CryptoJS) {
+                document.getElementById('authScreen').innerHTML = `
+                <div class="text-center p-8 card-glass rounded-3xl">
+                    <p class="headline-small mb-3">Security Error</p>
+                    <p class="body-medium opacity-70 mb-6">Encryption library failed to load. Check your connection.</p>
+                    <button onclick="location.reload()" class="btn-filled">Retry</button>
+                </div>`;
+                lucide.createIcons();
+            }
+        });
+
+        function setDefaultDate() {
+            const d = document.getElementById('txDate');
+            if (d) d.value = new Date().toISOString().slice(0, 10);
+        }
+
+        function initTheme() {
+            const stored = localStorage.getItem('aura_theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (stored === 'dark' || (!stored && prefersDark)) document.documentElement.classList.add('dark');
+            updateThemeIcon();
+        }
+
+        function initAIChat() {
+            document.getElementById('aiChatFloatingBtn')?.addEventListener('click', toggleAIChat);
+            document.getElementById('closeChatBtn')?.addEventListener('click', toggleAIChat);
+            document.getElementById('aiChatSendBtn')?.addEventListener('click', sendChatMessage);
+
+            const input = document.getElementById('aiChatInput');
+            if (input) {
+                input.addEventListener('keypress', e => {
+                    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+                });
+                input.addEventListener('input', () => autoResizeTextarea(input));
+            }
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && document.getElementById('aiChatOverlay').style.display === 'block') toggleAIChat();
+            });
+
+            document.getElementById('aiChatOverlay')?.addEventListener('click', e => {
+                if (e.target.id === 'aiChatOverlay' && window.innerWidth <= 768) toggleAIChat();
+            });
+
+            const checkSize = () => {
+                const c = document.getElementById('aiChatContainer');
+                window.innerWidth >= 769 ? c.classList.add('desktop') : c.classList.remove('desktop');
             };
-            const loadImage = (image) => {
-                image.src = image.dataset.src;
-                image.onload = () => image.classList.add('fade-in');
+            checkSize();
+            window.addEventListener('resize', checkSize);
+        }
+
+        // ========== CUSTOM DROPDOWNS ==========
+        function createCustomDropdown(selectId, wrapperId) {
+            const sel = document.getElementById(selectId);
+            const wrap = document.getElementById(wrapperId);
+            if (!sel || !wrap) return;
+
+            const opts = Array.from(sel.options).map(o => ({ val: o.value, text: o.text }));
+
+            wrap.innerHTML = `
+            <div class="relative">
+                <div class="flex items-center justify-between px-5 py-4 rounded-2xl cursor-pointer transition-colors"
+                     style="background:var(--md-sys-color-surface-container-high); border:1px solid var(--md-sys-color-outline-variant);"
+                     onclick="toggleDropdown(this)">
+                    <span class="label-medium" id="${selectId}-display">${opts[0]?.text || 'Select'}</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 opacity-50 transition-transform duration-200"></i>
+                </div>
+                <div class="custom-select-options absolute top-full left-0 right-0 mt-1 z-30 hidden rounded-xl overflow-hidden" style="box-shadow:var(--md-elevation-3)">
+                    ${opts.map(o => `<div class="custom-select-option" onclick="selectOption('${selectId}','${o.val}','${o.text}',this)">${o.text}</div>`).join('')}
+                </div>
+            </div>
+        `;
+            lucide.createIcons();
+        }
+
+        function toggleDropdown(el) {
+            const wrap = el.closest('.relative').parentElement;
+            const isOpen = wrap.querySelector('.custom-select-options').classList.contains('hidden') === false;
+            // Close all
+            document.querySelectorAll('.custom-select-options').forEach(d => d.classList.add('hidden'));
+            document.querySelectorAll('[onclick="toggleDropdown(this)"] i').forEach(i => i.style.transform = '');
+            if (!isOpen) {
+                wrap.querySelector('.custom-select-options').classList.remove('hidden');
+                el.querySelector('i').style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function selectOption(selectId, val, text, el) {
+            const sel = document.getElementById(selectId);
+            if (!sel) return;
+            sel.value = val;
+            const disp = document.getElementById(`${selectId}-display`);
+            if (disp) disp.textContent = text;
+            const opts = el.closest('.custom-select-options');
+            if (opts) {
+                opts.classList.add('hidden');
+                opts.closest('.relative')?.querySelector('[onclick="toggleDropdown(this)"] i')?.style && (opts.closest('.relative').querySelector('[onclick="toggleDropdown(this)"] i').style.transform = '');
+            }
+        }
+
+        function setupCustomDropdowns() {
+            createCustomDropdown('type', 'type-dropdown');
+            createCustomDropdown('category', 'category-dropdown');
+            document.addEventListener('click', e => {
+                if (!e.target.closest('[onclick="toggleDropdown(this)"]') && !e.target.closest('.custom-select-options')) {
+                    document.querySelectorAll('.custom-select-options').forEach(d => d.classList.add('hidden'));
+                }
+            });
+        }
+
+        // ========== SECURITY ==========
+        function initSecurity() {
+            const stored = localStorage.getItem('aura_lock');
+            if (!stored) {
+                document.getElementById('authTitle').textContent = 'Setup Secure Vault';
+                document.getElementById('authSubtitle').textContent = 'Create a password to encrypt your data locally.';
+            }
+            setTimeout(() => document.getElementById('authInput')?.focus(), 300);
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const pin = document.getElementById('authInput').value.trim();
+            const stored = localStorage.getItem('aura_lock');
+
+            if (!pin || pin.length < 4) { notify('Password too short (min 4 chars)', 'error'); shakeAuth(); return; }
+
+            try {
+                if (!stored) {
+                    const lock = CryptoJS.AES.encrypt('VERIFY', pin).toString();
+                    localStorage.setItem('aura_lock', lock);
+                    sessionPin = pin;
+                    notify('Vault created & secured!', 'success');
+                    unlockApp();
+                } else {
+                    const dec = CryptoJS.AES.decrypt(stored, pin).toString(CryptoJS.enc.Utf8);
+                    if (dec === 'VERIFY') {
+                        sessionPin = pin;
+                        loadData();
+                        unlockApp();
+                    } else throw new Error('Invalid');
+                }
+            } catch {
+                notify('Invalid password', 'error');
+                shakeAuth();
+                document.getElementById('authInput').value = '';
+            }
+        });
+
+        function loadData() {
+            const encKey = localStorage.getItem('aura_api_key');
+            if (encKey) {
+                try { apiKey = CryptoJS.AES.decrypt(encKey, sessionPin).toString(CryptoJS.enc.Utf8); }
+                catch { console.warn('Failed to decrypt API key'); }
+            }
+            const encTx = localStorage.getItem('aura_v4_tx');
+            if (encTx) {
+                try { transactions = JSON.parse(CryptoJS.AES.decrypt(encTx, sessionPin).toString(CryptoJS.enc.Utf8)) || []; }
+                catch { transactions = []; }
+            }
+            updateUI();
+        }
+
+        function saveData() {
+            if (!sessionPin) return;
+            try {
+                localStorage.setItem('aura_v4_tx', CryptoJS.AES.encrypt(JSON.stringify(transactions), sessionPin).toString());
+                if (apiKey) localStorage.setItem('aura_api_key', CryptoJS.AES.encrypt(apiKey, sessionPin).toString());
+            } catch { notify('Failed to save data', 'error'); }
+        }
+
+        // ========== MODALS ==========
+        function openSettingsModal() {
+            document.getElementById('apiKeyInput').value = apiKey || '';
+            document.getElementById('settingsModal').classList.add('open');
+        }
+        function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
+        function saveSettings() { apiKey = document.getElementById('apiKeyInput').value.trim(); saveData(); closeSettingsModal(); notify('Settings saved', 'success'); }
+
+        function openResetModal() { document.getElementById('resetModal').classList.add('open'); }
+        function closeResetModal() { document.getElementById('resetModal').classList.remove('open'); }
+        function confirmReset() {
+            if (document.getElementById('resetPinInput').value === sessionPin) {
+                transactions = [];
+                localStorage.removeItem('aura_v4_tx');
+                localStorage.removeItem('aura_api_key');
+                closeResetModal();
+                updateUI();
+                notify('All data has been reset', 'success');
+            } else { notify('Wrong password', 'error'); }
+        }
+
+        // Close modals clicking scrim
+        ['settingsModal', 'resetModal'].forEach(id => {
+            document.getElementById(id)?.addEventListener('click', e => {
+                if (e.target.id === id) {
+                    if (id === 'settingsModal') closeSettingsModal();
+                    else closeResetModal();
+                }
+            });
+        });
+
+        // ========== UI HELPERS ==========
+        function shakeAuth() {
+            const w = document.getElementById('authInputWrap');
+            if (!w) return;
+            w.classList.add('animate-bounce');
+            setTimeout(() => w.classList.remove('animate-bounce'), 500);
+        }
+
+        function unlockApp() {
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('appContent').classList.remove('hidden');
+            updateUI();
+        }
+
+        function togglePrivacy() {
+            isPrivacyMode = !isPrivacyMode;
+            // BUG FIX: use body class 'privacy-active' instead of 'active' on a div with privacy-mask class
+            document.body.classList.toggle('privacy-active', isPrivacyMode);
+            const icon = document.getElementById('privacyIcon');
+            if (icon) { icon.setAttribute('data-lucide', isPrivacyMode ? 'eye-off' : 'eye'); lucide.createIcons(); }
+            notify(isPrivacyMode ? 'Privacy mode on' : 'Privacy mode off', 'info');
+        }
+
+        function updateThemeIcon() {
+            const icon = document.getElementById('themeIcon');
+            if (icon) { icon.setAttribute('data-lucide', document.documentElement.classList.contains('dark') ? 'sun' : 'moon'); lucide.createIcons(); }
+        }
+
+        document.getElementById('themeToggle')?.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.contains('dark');
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('aura_theme', isDark ? 'light' : 'dark');
+            updateThemeIcon();
+            renderChart();
+            notify(`Switched to ${isDark ? 'light' : 'dark'} mode`, 'info');
+        });
+
+        function toggleSmartPaste() {
+            const area = document.getElementById('smartPasteArea');
+            if (!area) return;
+            area.classList.toggle('hidden');
+            if (!area.classList.contains('hidden')) document.getElementById('pasteInput')?.focus();
+        }
+
+        function adjustAmount(val) {
+            const inp = document.getElementById('amount');
+            if (!inp) return;
+            inp.value = Math.max(0, (parseFloat(inp.value) || 0) + val).toFixed(2);
+        }
+
+        function autoResizeTextarea(el) {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+        }
+
+        function escapeHtml(s) {
+            return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // ========== NOTIFICATIONS ==========
+        function notify(msg, type = 'info') {
+            const host = document.getElementById('notification-host');
+            if (!host) return;
+            const s = document.createElement('div');
+            s.className = `snackbar ${type}`;
+            const icons = { success: 'check-circle', error: 'x-circle', info: 'info' };
+            s.innerHTML = `
+            <i data-lucide="${icons[type] || 'info'}" class="snackbar-icon w-5 h-5 flex-shrink-0"></i>
+            <span class="body-medium flex-1">${escapeHtml(msg)}</span>
+            <button class="snackbar-action" onclick="this.closest('.snackbar').remove()">DISMISS</button>
+        `;
+            host.appendChild(s);
+            lucide.createIcons();
+            setTimeout(() => {
+                if (s.parentNode) {
+                    s.style.animation = 'snackbarOut .3s ease forwards';
+                    setTimeout(() => s.remove(), 300);
+                }
+            }, 4000);
+        }
+
+        // ========== CURRENCY ==========
+        function formatCurrency(n) {
+            if (isNaN(n)) n = 0;
+            return new Intl.NumberFormat('en-GH', { style: 'currency', currency: 'GHS', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+        }
+
+        // ========== ICONS / CATEGORY ==========
+        const ICON_MAP = {
+            Food: 'utensils', Transport: 'car', Shopping: 'shopping-bag', Bills: 'zap',
+            Salary: 'banknote', Health: 'heart', Savings: 'piggy-bank', Entertainment: 'tv', Education: 'graduation-cap'
+        };
+        const CAT_CLASS = {
+            Food: 'cat-food', Transport: 'cat-transport', Shopping: 'cat-shopping', Bills: 'cat-bills',
+            Salary: 'cat-salary', Health: 'cat-health', Savings: 'cat-savings', Entertainment: 'cat-entertainment',
+            Education: 'cat-education'
+        };
+        const CAT_MAP_FROM_AI = {
+            'food & dining': 'Food', 'food': 'Food', 'dining': 'Food',
+            'transport': 'Transport', 'transportation': 'Transport', 'taxi': 'Transport',
+            'shopping': 'Shopping',
+            'utilities & bills': 'Bills', 'bills': 'Bills', 'utilities': 'Bills', 'utility': 'Bills',
+            'salary / income': 'Salary', 'salary': 'Salary', 'income': 'Salary',
+            'health & fitness': 'Health', 'health': 'Health', 'fitness': 'Health',
+            'savings & invest': 'Savings', 'savings': 'Savings', 'investment': 'Savings',
+            'entertainment': 'Entertainment', 'education': 'Education'
+        };
+        function mapCategory(raw) { return CAT_MAP_FROM_AI[(raw || '').toLowerCase()] || 'Food'; }
+        function getIcon(cat) { return ICON_MAP[cat] || 'dollar-sign'; }
+        function getCatClass(cat) { return CAT_CLASS[cat] || 'cat-other'; }
+
+        // ========== TRANSACTIONS ==========
+        document.getElementById('financeForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const desc = document.getElementById('description').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.getElementById('type').value;
+            const category = document.getElementById('category').value;
+            const recurr = document.getElementById('isRecurring').checked;
+            const dateVal = document.getElementById('txDate').value;
+
+            if (!desc || isNaN(amount) || amount <= 0) { notify('Please enter valid transaction details', 'error'); return; }
+
+            transactions.unshift({
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                description: desc, amount, type, category,
+                isRecurring: recurr,
+                date: dateVal ? new Date(dateVal).toISOString() : new Date().toISOString()
+            });
+            saveData();
+            e.target.reset();
+            setDefaultDate();
+            document.getElementById('type-display').textContent = 'Expense';
+            document.getElementById('category-display').textContent = 'Food & Dining';
+            document.getElementById('type').value = 'expense';
+            document.getElementById('category').value = 'Food';
+            notify('Transaction saved!', 'success');
+        });
+
+        function deleteTransaction(id) {
+            if (!confirm('Delete this transaction?')) return;
+            transactions = transactions.filter(t => t.id !== id);
+            saveData();
+            notify('Transaction deleted', 'info');
+        }
+
+        // ========== CSV IMPORT / EXPORT ==========
+        function triggerImport() { document.getElementById('importFile').click(); }
+
+        function processImport(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                try {
+                    const lines = ev.target.result.split('\n').filter(l => l.trim());
+                    let count = 0;
+                    for (let i = 1; i < lines.length; i++) {
+                        const cols = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+                        if (cols.length >= 5) {
+                            const amt = parseFloat(cols[4]);
+                            if (amt > 0) {
+                                transactions.push({
+                                    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                                    date: cols[0] || new Date().toISOString(),
+                                    description: cols[1] || 'Imported',
+                                    type: (cols[2] || 'expense').toLowerCase(),
+                                    category: cols[3] || 'Other',
+                                    amount: amt,
+                                    isRecurring: (cols[5] || '').toLowerCase() === 'true'
+                                });
+                                count++;
+                            }
+                        }
+                    }
+                    if (count > 0) { saveData(); notify(`Imported ${count} transactions`, 'success'); }
+                    else notify('No valid transactions found', 'error');
+                } catch { notify('Import failed. Check file format.', 'error'); }
             };
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        loadImage(entry.target);
-                        observer.unobserve(entry.target);
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function exportToCSV() {
+            if (!transactions.length) { notify('No data to export', 'error'); return; }
+            let csv = 'Date,Description,Type,Category,Amount,Recurring\n';
+            transactions.forEach(t => { csv += `"${t.date}","${t.description.replace(/"/g, '""')}",${t.type},${t.category},${t.amount},${t.isRecurring ? 'Yes' : 'No'}\n`; });
+            const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+            const a = Object.assign(document.createElement('a'), { href: url, download: `aura_${new Date().toISOString().slice(0, 10)}.csv` });
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            notify('Exported successfully', 'success');
+        }
+
+        // ========== UI UPDATE ==========
+        function updateUI() {
+            if (!transactions) transactions = [];
+            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const query = (document.getElementById('searchInput')?.value || '').toLowerCase();
+            const filtered = transactions.filter(t => t.description?.toLowerCase().includes(query) || t.category?.toLowerCase().includes(query));
+
+            const totalInc = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const totalExp = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            const balance = totalInc - totalExp;
+
+            const now = new Date(), cm = now.getMonth(), cy = now.getFullYear();
+            const mInc = transactions.filter(t => t.type === 'income' && new Date(t.date).getMonth() === cm && new Date(t.date).getFullYear() === cy).reduce((s, t) => s + t.amount, 0);
+            const mExp = transactions.filter(t => t.type === 'expense' && new Date(t.date).getMonth() === cm && new Date(t.date).getFullYear() === cy).reduce((s, t) => s + t.amount, 0);
+            const saveRate = mInc > 0 ? ((mInc - mExp) / mInc * 100).toFixed(1) : 0;
+
+            setText('totalBalance', formatCurrency(balance));
+            setText('monthlyIncome', formatCurrency(mInc));
+            setText('monthlyExpense', formatCurrency(mExp));
+            setText('totalIncome', formatCurrency(totalInc));
+            setText('savingsRate', `${saveRate}%`);
+            setText('lastUpdated', new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+            setText('netWorth', formatCurrency(balance));
+
+            const maxExp = transactions.filter(t => t.type === 'expense').reduce((m, t) => Math.max(m, t.amount), 0);
+            setText('largestExpense', formatCurrency(maxExp));
+
+            const d30 = new Date(); d30.setDate(d30.getDate() - 30);
+            const avg = transactions.filter(t => t.type === 'expense' && new Date(t.date) >= d30).reduce((s, t) => s + t.amount, 0) / 30;
+            setText('avgDailySpend', formatCurrency(avg));
+
+            const target = mInc * .8;
+            const adherence = target > 0 ? Math.min(100, (1 - Math.max(0, mExp - target) / target) * 100).toFixed(0) : 100;
+            setText('budgetAdherence', `${adherence}%`);
+            const bar = document.getElementById('budgetBar');
+            if (bar) bar.style.width = `${adherence}%`;
+
+            renderList(filtered);
+            renderChart();
+        }
+
+        function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+
+        document.getElementById('searchInput')?.addEventListener('input', updateUI);
+
+        function renderList(items) {
+            const list = document.getElementById('transactionList');
+            if (!list) return;
+            if (!items || !items.length) {
+                list.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-16 text-center opacity-40">
+                    <i data-lucide="inbox" class="w-14 h-14 mb-4"></i>
+                    <p class="title-small">No transactions found</p>
+                    <p class="body-small mt-1">Try a different search or add a new transaction</p>
+                </div>`;
+                lucide.createIcons(); return;
+            }
+
+            list.innerHTML = items.map(t => {
+                const d = new Date(t.date);
+                const dStr = d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                const tStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const cc = getCatClass(t.category);
+                return `
+                <div class="flex items-center justify-between p-4 rounded-xl transition-all duration-200 hover:shadow-sm group"
+                     style="background:var(--md-sys-color-surface-container); border:1px solid var(--md-sys-color-outline-variant); margin-bottom:8px;">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl ${cc} flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+                            <i data-lucide="${getIcon(t.category)}" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="label-large privacy-text">${escapeHtml(t.description)}</p>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <span class="body-small opacity-50">${dStr}</span>
+                                <span class="w-1 h-1 rounded-full opacity-30" style="background:currentColor"></span>
+                                <span class="body-small opacity-50">${tStr}</span>
+                                ${t.isRecurring ? `<span class="label-small px-2 py-0.5 rounded-full" style="background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container)">Recurring</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="title-small font-bold privacy-text ${t.type === 'income' ? 'text-emerald-600' : 'text-red-500'}">
+                            ${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
+                        </p>
+                        <button onclick="deleteTransaction('${t.id}')"
+                            class="body-small opacity-0 group-hover:opacity-40 hover:!opacity-100 transition-opacity mt-1"
+                            style="color:var(--md-sys-color-error); border:none; background:none; cursor:pointer;">
+                            Delete
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // ========== CHARTS ==========
+        function setChartType(type) {
+            currentChartType = type;
+            document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+            const id = { doughnut: 'btnDoughnut', weekly: 'btnWeekly', monthly: 'btnMonthly', yearly: 'btnYearly' }[type];
+            document.getElementById(id)?.classList.add('active');
+            renderChart();
+        }
+
+        function renderChart() {
+            const canvas = document.getElementById('financeChart');
+            if (!canvas) return;
+            if (financeChart) { financeChart.destroy(); financeChart = null; }
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#CAC4D0' : '#47464F';
+            const gridColor = isDark ? 'rgba(202,196,208,.08)' : 'rgba(71,70,79,.06)';
+
+            const COLORS = ['#4A55A2', '#76536B', '#5B5D72', '#1B873A', '#B06B00', '#0077B6', '#9B2226', '#6D4C41', '#1565C0'];
+
+            if (!transactions.length) {
+                document.getElementById('chartEmpty')?.classList.remove('hidden');
+                document.getElementById('chartEmpty')?.classList.add('flex');
+                canvas.classList.add('hidden');
+                return;
+            }
+            document.getElementById('chartEmpty')?.classList.add('hidden');
+            canvas.classList.remove('hidden');
+
+            let labels = [], datasets = [], chartType = 'doughnut';
+
+            if (currentChartType === 'doughnut') {
+                const cats = {};
+                transactions.filter(t => t.type === 'expense').forEach(t => { cats[t.category] = (cats[t.category] || 0) + t.amount; });
+                labels = Object.keys(cats).length ? Object.keys(cats) : ['No data'];
+                datasets = [{ data: Object.keys(cats).length ? Object.values(cats) : [1], backgroundColor: COLORS, borderWidth: 0, hoverOffset: 6 }];
+                chartType = 'doughnut';
+
+            } else if (currentChartType === 'weekly') {
+                const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                const now = new Date();
+                const wInc = Array(7).fill(0), wExp = Array(7).fill(0);
+                transactions.forEach(t => {
+                    const d = new Date(t.date);
+                    const diff = Math.floor((now - d) / 86400000);
+                    if (diff >= 0 && diff < 7) {
+                        const idx = (now.getDay() + 6 - d.getDay()) % 7;
+                        if (t.type === 'income') wInc[idx] += t.amount; else wExp[idx] += t.amount;
                     }
                 });
-            }, options);
-            images.forEach(image => observer.observe(image));
-        };
-        // Debounce example for input handling
-        const handleInputChange = debounce((event) => {
-            console.log('Input value:', event.target.value);
-        }, 300);
-        document.querySelector('input').addEventListener('input', handleInputChange);
+                labels = days;
+                datasets = [{ label: 'Income', data: wInc, backgroundColor: color_alpha('#1B873A', .8), borderColor: '#1B873A', borderWidth: 2, borderRadius: 6 }, { label: 'Expenses', data: wExp, backgroundColor: color_alpha('#B3261E', .8), borderColor: '#B3261E', borderWidth: 2, borderRadius: 6 }];
+                chartType = 'bar';
 
-        // Initialize lazy loading on document load
-        document.addEventListener('DOMContentLoaded', lazyLoadImages);
+            } else if (currentChartType === 'monthly') {
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                const mInc = Array(12).fill(0), mExp = Array(12).fill(0);
+                transactions.forEach(t => {
+                    const m = new Date(t.date).getMonth();
+                    if (t.type === 'income') mInc[m] += t.amount; else mExp[m] += t.amount;
+                });
+                labels = months;
+                datasets = [
+                    { label: 'Income', data: mInc, backgroundColor: color_alpha('#1B873A', .7), borderColor: '#1B873A', borderWidth: 2, borderRadius: 6, fill: false },
+                    { label: 'Expenses', data: mExp, backgroundColor: color_alpha('#B3261E', .7), borderColor: '#B3261E', borderWidth: 2, borderRadius: 6, fill: false }
+                ];
+                chartType = 'bar';
 
-        // Debounce function
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
+            } else if (currentChartType === 'yearly') {
+                const byYear = {};
+                transactions.forEach(t => { const y = new Date(t.date).getFullYear(); byYear[y] = (byYear[y] || []).concat(t); });
+                const sorted = Object.keys(byYear).sort();
+                labels = sorted;
+                datasets = [
+                    { label: 'Income', data: sorted.map(y => byYear[y].filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0)), backgroundColor: color_alpha('#1B873A', .8), borderColor: '#1B873A', borderWidth: 2, borderRadius: 6 },
+                    { label: 'Expenses', data: sorted.map(y => byYear[y].filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0)), backgroundColor: color_alpha('#B3261E', .8), borderColor: '#B3261E', borderWidth: 2, borderRadius: 6 }
+                ];
+                chartType = 'bar';
+            }
+
+            financeChart = new Chart(canvas.getContext('2d'), {
+                type: chartType,
+                data: { labels, datasets },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: textColor, padding: 16, font: { size: 12, family: 'DM Sans' }, usePointStyle: true, pointStyleWidth: 10 } },
+                        tooltip: { callbacks: { label: ctx => ` ${formatCurrency(ctx.raw)}` } }
+                    },
+                    ...(chartType !== 'doughnut' && {
+                        scales: {
+                            x: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'DM Sans' } } },
+                            y: { grid: { color: gridColor }, ticks: { color: textColor, font: { family: 'DM Sans' }, callback: v => formatCurrency(v) } }
+                        }
+                    }),
+                    ...(chartType === 'doughnut' && { cutout: '65%' })
+                }
+            });
+        }
+
+        function color_alpha(hex, a) {
+            const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r},${g},${b},${a})`;
+        }
+
+        // ========== AI CHAT ==========
+        function toggleAIChat() {
+            const overlay = document.getElementById('aiChatOverlay');
+            const container = document.getElementById('aiChatContainer');
+            const fab = document.getElementById('aiChatFloatingBtn');
+            const isOpen = overlay.style.display === 'block';
+
+            if (isOpen) {
+                overlay.style.display = 'none';
+                container.classList.remove('active');
+                fab.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                overlay.style.display = 'block';
+                setTimeout(() => { container.classList.add('active'); fab.classList.add('active'); }, 10);
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => document.getElementById('aiChatInput')?.focus(), 400);
+                if (aiChatHistory.length === 0 && transactions.length > 0) addSystemGreeting();
+            }
+        }
+
+        function addSystemGreeting() {
+            const msgs = document.getElementById('aiChatMessages');
+            if (!msgs) return;
+            const div = document.createElement('div');
+            div.className = 'message assistant';
+            div.innerHTML = `I can see you have <strong>${transactions.length} transactions</strong> recorded. I'm ready to help analyze your financial data! What would you like to know?`;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+        function addMessage(content, sender = 'assistant') {
+            const msgs = document.getElementById('aiChatMessages');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.innerHTML = `<span>${content}</span>`;
+            msgs.appendChild(div);
+            msgs.scrollTop = msgs.scrollHeight;
+            return div;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('aiChatInput');
+            const msg = input.value.trim();
+            if (!msg || isStreamingResponse) return;
+
+            if (!apiKey) { notify('Add your Gemini API key in Settings first', 'error'); openSettingsModal(); return; }
+
+            addMessage(escapeHtml(msg), 'user');
+            aiChatHistory.push({ role: 'user', content: msg });
+            input.value = ''; autoResizeTextarea(input);
+
+            const thinking = addMessage('<span class="thinking-dots"><span>●</span><span>●</span><span>●</span></span>', 'assistant');
+            isStreamingResponse = true;
+
+            try {
+                const ctx = transactions.slice(0, 50).map(t => ({ date: new Date(t.date).toLocaleDateString(), type: t.type, category: t.category, amount: t.amount, description: t.description.slice(0, 30) }));
+                const sys = `You are a professional financial advisor for a Ghanaian user. Transaction history: ${JSON.stringify(ctx)}. Balance: GH₵${calcBalance()}, Monthly Income: GH₵${calcMonthlyIncome()}, Monthly Expenses: GH₵${calcMonthlyExpenses()}, Savings Rate: ${calcSavingsRate()}%. Provide concise, actionable advice.`;
+
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: `${sys}\n\nUser: ${msg}` }] }] })
+                });
+                if (!res.ok) throw new Error(`API error: ${res.status}`);
+                const data = await res.json();
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+
+                thinking.remove();
+                streamResponse(reply);
+                aiChatHistory.push({ role: 'assistant', content: reply });
+
+            } catch (err) {
+                thinking.remove();
+                addMessage(`⚠️ Error: ${err.message}. Please check your API key.`);
+            } finally { isStreamingResponse = false; }
+        }
+
+        function streamResponse(text) {
+            const msgs = document.getElementById('aiChatMessages');
+            const div = document.createElement('div');
+            div.className = 'message assistant ai-cursor';
+            const span = document.createElement('span');
+            span.textContent = '';
+            div.appendChild(span);
+            msgs.appendChild(div);
+
+            let i = 0;
+            const tick = () => {
+                if (i < text.length) {
+                    span.textContent += text.charAt(i++);
+                    msgs.scrollTop = msgs.scrollHeight;
+                    setTimeout(tick, 18);
+                } else { div.classList.remove('ai-cursor'); }
             };
-        };
+            tick();
+        }
+
+        function quickAction(action) {
+            const p = {
+                analyzeSpending: 'Analyze my spending patterns and identify the top 3 areas where I can save money.',
+                savingsTips: 'What are 3 practical tips to increase my savings rate based on my current spending?',
+                budgetReview: 'Review my budget and suggest realistic improvements for next month.',
+                investAdvice: 'Given my financial profile, what investment options should I consider for a Ghanaian?'
+            };
+            const inp = document.getElementById('aiChatInput');
+            if (!inp) return;
+            inp.value = p[action];
+            autoResizeTextarea(inp);
+            sendChatMessage();
+        }
+
+        // ========== SMART PASTE ==========
+        async function processSmartPasteAI() {
+            const text = document.getElementById('pasteInput')?.value.trim();
+            if (!text) { notify('Please paste some text first', 'error'); return; }
+            if (!apiKey) { notify('Set your API key in Settings first', 'error'); openSettingsModal(); return; }
+
+            const btn = document.getElementById('smartPasteBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Analyzing…';
+            lucide.createIcons();
+
+            try {
+                const prompt = `Extract financial transactions from: "${text}". Return ONLY valid JSON (no markdown, no backticks):
+{"transactions":[{"amount":number,"type":"expense"|"income","category":"Food"|"Transport"|"Shopping"|"Bills"|"Salary"|"Health"|"Savings"|"Entertainment"|"Education","description":"string","isRecurring":boolean,"confidence":number}],"summary":{"totalExpenses":number,"totalIncome":number}}`;
+
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: .1, topP: .8 } })
+                });
+                if (!res.ok) throw new Error(`API ${res.status}`);
+
+                const data = await res.json();
+                const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+                const match = raw.match(/\{[\s\S]*\}/);
+                const result = match ? JSON.parse(match[0]) : { transactions: [] };
+
+                if (result.transactions?.length) {
+                    lastExtractedData = result;
+                    showExtractedPreview(result);
+                    const t = result.transactions[0];
+                    if (t.amount) document.getElementById('amount').value = parseFloat(t.amount).toFixed(2);
+                    if (t.description) document.getElementById('description').value = t.description;
+                    if (t.type) {
+                        document.getElementById('type').value = t.type.toLowerCase();
+                        document.getElementById('type-display').textContent = t.type.charAt(0).toUpperCase() + t.type.slice(1);
+                    }
+                    if (t.category) {
+                        const cat = mapCategory(t.category);
+                        document.getElementById('category').value = cat;
+                        const opt = Array.from(document.getElementById('category').options).find(o => o.value === cat);
+                        document.getElementById('category-display').textContent = opt?.text || t.category;
+                    }
+                    if (t.isRecurring) document.getElementById('isRecurring').checked = true;
+                    notify(`Extracted ${result.transactions.length} transaction(s)`, 'success');
+                } else { notify('No transactions found in that text.', 'info'); }
+
+            } catch (err) {
+                notify('AI processing failed: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="wand-2" class="w-4 h-4"></i> Auto-Fill with AI';
+                lucide.createIcons();
+            }
+        }
+
+        function showExtractedPreview(result) {
+            const prev = document.getElementById('pastePreview');
+            if (!prev) return;
+            prev.innerHTML = `
+            <div class="mt-4 rounded-xl overflow-hidden" style="border:1px solid var(--md-sys-color-outline-variant)">
+                <div class="px-4 py-3 label-medium" style="background:var(--md-sys-color-surface-container-high)">AI Analysis Results</div>
+                ${result.transactions.slice(0, 4).map(tx => `
+                    <div class="extracted-item px-4" style="background:var(--md-sys-color-surface-container)">
+                        <div>
+                            <p class="label-medium">${escapeHtml(tx.description || 'Transaction')}</p>
+                            <div class="flex gap-2 mt-1">
+                                <span class="label-small px-2 py-0.5 rounded" style="background:${tx.type === 'expense' ? 'var(--md-sys-color-error-container)' : 'var(--success-container)'}; color:${tx.type === 'expense' ? 'var(--md-sys-color-error)' : 'var(--success)'}">${tx.type}</span>
+                                <span class="label-small px-2 py-0.5 rounded" style="background:var(--md-sys-color-secondary-container); color:var(--md-sys-color-on-secondary-container)">${tx.category}</span>
+                            </div>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <p class="title-small font-bold ${tx.type === 'expense' ? 'text-red-500' : 'text-emerald-600'}">GH₵${parseFloat(tx.amount || 0).toFixed(2)}</p>
+                            <p class="body-small opacity-50">${Math.round((tx.confidence || 0) * 100)}% conf.</p>
+                        </div>
+                    </div>`).join('')}
+                ${result.transactions.length > 4 ? `<div class="px-4 py-2 body-small opacity-60" style="background:var(--md-sys-color-surface-container)">+${result.transactions.length - 4} more</div>` : ''}
+                <div class="p-3" style="background:var(--md-sys-color-surface-container-high)">
+                    <button onclick="addAllExtractedTransactions()" class="btn-filled w-full ripple gap-2" style="border-radius:12px; min-height:40px; font-size:13px;">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add All ${result.transactions.length} Transaction(s)
+                    </button>
+                </div>
+            </div>`;
+            lucide.createIcons();
+        }
+
+        // BUG FIX: Fully implemented addAllExtractedTransactions
+        function addAllExtractedTransactions() {
+            if (!lastExtractedData?.transactions?.length) { notify('No extracted transactions to add', 'error'); return; }
+            let count = 0;
+            lastExtractedData.transactions.forEach(t => {
+                const amt = parseFloat(t.amount);
+                if (!t.description || isNaN(amt) || amt <= 0) return;
+                transactions.unshift({
+                    id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                    description: t.description,
+                    amount: amt,
+                    type: t.type?.toLowerCase() === 'income' ? 'income' : 'expense',
+                    category: mapCategory(t.category || ''),
+                    isRecurring: !!t.isRecurring,
+                    date: new Date().toISOString()
+                });
+                count++;
+            });
+            if (count) {
+                saveData();
+                notify(`Added ${count} transactions`, 'success');
+                document.getElementById('pastePreview').innerHTML = '';
+                document.getElementById('pasteInput').value = '';
+                lastExtractedData = null;
+                document.getElementById('smartPasteArea').classList.add('hidden');
+            } else { notify('No valid transactions to add', 'error'); }
+        }
+
+        // ========== AI ADVICE ==========
+        async function getAIAdvice() {
+            if (!apiKey) { notify('Add your Gemini API key in Settings first', 'error'); openSettingsModal(); return; }
+            const box = document.getElementById('aiResponse');
+            const btn = document.getElementById('aiAdvisorBtn');
+            if (!box || !btn) return;
+
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> Analyzing';
+            btn.disabled = true;
+            lucide.createIcons();
+            box.innerHTML = `<div class="space-y-3 animate-pulse">
+            <div class="shimmer-loading h-6 rounded-full w-3/4"></div>
+            <div class="shimmer-loading h-4 rounded-full w-full"></div>
+            <div class="shimmer-loading h-4 rounded-full w-5/6"></div>
+            <div class="shimmer-loading h-6 rounded-full w-2/3 mt-4"></div>
+            <div class="shimmer-loading h-4 rounded-full w-full"></div>
+        </div>`;
+
+            try {
+                const fd = {
+                    transactions: transactions.slice(0, 50).map(t => ({ type: t.type, category: t.category, amount: t.amount, description: t.description.slice(0, 30) })),
+                    metrics: { monthlyIncome: calcMonthlyIncome(), monthlyExpenses: calcMonthlyExpenses(), savingsRate: calcSavingsRate(), totalBalance: calcBalance() }
+                };
+                const prompt = `As a financial advisor for a Ghanaian user, analyze this data and give personalized advice.\nData: ${JSON.stringify(fd)}\n\nProvide:\n1. 3 key insights (with emoji bullets)\n2. 2 actionable recommendations\n3. 1 risk warning\n4. Brief encouragement\n\nKeep it concise and practical. Use GH₵ for currency.`;
+
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                if (!res.ok) throw new Error(`API ${res.status}`);
+                const data = await res.json();
+                let advice = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No insights available.';
+                advice = advice.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n\n/g, '</p><p class="mt-3">').replace(/\n/g, '<br>');
+
+                box.innerHTML = `
+                <div class="ai-insight-card">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background:var(--md-sys-color-primary-container)">
+                            <i data-lucide="lightbulb" class="w-4 h-4" style="color:var(--md-sys-color-on-primary-container)"></i>
+                        </div>
+                        <div>
+                            <p class="title-small">AI Insights</p>
+                            <p class="body-small opacity-60">Based on ${transactions.length} transactions</p>
+                        </div>
+                    </div>
+                    <p class="body-medium leading-relaxed">${advice}</p>
+                </div>
+                <div class="text-center mt-3">
+                    <button onclick="toggleAIChat()" class="btn-text gap-1" style="font-size:13px;">
+                        <i data-lucide="message-square" class="w-4 h-4"></i> Ask follow-up questions
+                    </button>
+                </div>`;
+                lucide.createIcons();
+
+            } catch (err) {
+                box.innerHTML = `<div class="flex flex-col items-center justify-center py-8 text-center">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-3" style="background:var(--md-sys-color-error-container)">
+                    <i data-lucide="alert-circle" class="w-6 h-6" style="color:var(--md-sys-color-error)"></i>
+                </div>
+                <p class="title-small mb-1">Unable to get insights</p>
+                <p class="body-small opacity-60">${escapeHtml(err.message)}</p>
+            </div>`;
+                lucide.createIcons();
+            } finally {
+                btn.innerHTML = '<i data-lucide="refresh-cw" class="w-3 h-3"></i> Analyze';
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        // ========== FINANCIAL CALC HELPERS ==========
+        function calcMonthlyIncome() {
+            const { month: m, year: y } = getMonthYear();
+            return transactions.filter(t => t.type === 'income' && dateIs(t.date, m, y)).reduce((s, t) => s + t.amount, 0).toFixed(2);
+        }
+        function calcMonthlyExpenses() {
+            const { month: m, year: y } = getMonthYear();
+            return transactions.filter(t => t.type === 'expense' && dateIs(t.date, m, y)).reduce((s, t) => s + t.amount, 0).toFixed(2);
+        }
+        function calcSavingsRate() {
+            const inc = parseFloat(calcMonthlyIncome()), exp = parseFloat(calcMonthlyExpenses());
+            return inc > 0 ? ((inc - exp) / inc * 100).toFixed(1) : 0;
+        }
+        function calcBalance() {
+            return (transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0) -
+                transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0)).toFixed(2);
+        }
+        function getMonthYear() { const n = new Date(); return { month: n.getMonth(), year: n.getFullYear() }; }
+        function dateIs(d, m, y) { const dt = new Date(d); return dt.getMonth() === m && dt.getFullYear() === y; }
+
+        // ========== KICKOFF ==========
+        setChartType('doughnut');
     </script>
 </body>
+
 </html>
